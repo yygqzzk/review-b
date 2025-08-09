@@ -9,6 +9,7 @@ import (
 // BusinessRepo is a Business repo.
 type BusinessRepo interface {
 	Reply(context.Context, *ReplyEntity) error
+	SaveAppeal(context.Context, *AppealEntity) error
 }
 
 // BusinessUsecase is a Business usecase.
@@ -24,4 +25,9 @@ func NewBusinessUsecase(repo BusinessRepo, logger log.Logger) *BusinessUsecase {
 func (uc *BusinessUsecase) ReplyReview(ctx context.Context, replyEntity *ReplyEntity) error {
 	uc.log.WithContext(ctx).Infof("[biz] ReplyReview: %v", replyEntity)
 	return uc.repo.Reply(ctx, replyEntity)
+}
+
+func (uc *BusinessUsecase) SaveAppeal(ctx context.Context, appealEntity *AppealEntity) error {
+	uc.log.WithContext(ctx).Infof("[biz] SaveAppeal: %v", appealEntity)
+	return uc.repo.SaveAppeal(ctx, appealEntity)
 }

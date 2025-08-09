@@ -24,8 +24,8 @@ func NewBusinessRepo(data *Data, logger log.Logger) biz.BusinessRepo {
 func (b *businessRepo) Reply(ctx context.Context, replyEntity *biz.ReplyEntity) error {
 	b.log.WithContext(ctx).Infof("[data] Reply: %v", replyEntity)
 	rsp, err := b.data.reviewClient.ReplyReview(ctx, &pb.ReplyReviewReq{
-		ReviewId:  replyEntity.ReviewId,
-		StoreId:   replyEntity.StoreId,
+		ReviewID:  replyEntity.ReviewID,
+		StoreID:   replyEntity.StoreID,
 		Content:   replyEntity.Content,
 		PicInfo:   replyEntity.PicInfo,
 		VideoInfo: replyEntity.VideoInfo,
@@ -33,6 +33,23 @@ func (b *businessRepo) Reply(ctx context.Context, replyEntity *biz.ReplyEntity) 
 	if err != nil {
 		return err
 	}
-	replyEntity.ReplyId = rsp.ReplyId
+	replyEntity.ReplyID = rsp.ReplyID
+	return nil
+}
+
+func (b *businessRepo) SaveAppeal(ctx context.Context, appealEntity *biz.AppealEntity) error {
+	b.log.WithContext(ctx).Infof("[data] SaveAppeal: %v", appealEntity)
+	rsp, err := b.data.reviewClient.AppealReview(ctx, &pb.AppealReviewReq{
+		ReviewID:  appealEntity.ReviewID,
+		StoreID:   appealEntity.StoreID,
+		Reason:    appealEntity.Reason,
+		Content:   appealEntity.Content,
+		PicInfo:   appealEntity.PicInfo,
+		VideoInfo: appealEntity.VideoInfo,
+	})
+	if err != nil {
+		return err
+	}
+	appealEntity.AppealID = rsp.AppealID
 	return nil
 }

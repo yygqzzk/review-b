@@ -19,8 +19,8 @@ func NewBusinessService(uc *biz.BusinessUsecase) *BusinessService {
 func (s *BusinessService) ReplyReview(ctx context.Context, req *pb.ReplyReviewReq) (*pb.ReplyReviewRsp, error) {
 	// 商家回复评价
 	replyEntity := &biz.ReplyEntity{
-		ReviewId:  req.GetReviewId(),
-		StoreId:   req.GetStoreId(),
+		ReviewID:  req.GetReviewID(),
+		StoreID:   req.GetStoreID(),
 		Content:   req.GetContent(),
 		PicInfo:   req.GetPicInfo(),
 		VideoInfo: req.GetVideoInfo(),
@@ -30,6 +30,24 @@ func (s *BusinessService) ReplyReview(ctx context.Context, req *pb.ReplyReviewRe
 		return nil, err
 	}
 	return &pb.ReplyReviewRsp{
-		ReplyId: replyEntity.ReplyId,
+		ReplyID: replyEntity.ReplyID,
+	}, nil
+}
+
+func (s *BusinessService) AppealReview(ctx context.Context, req *pb.AppealReviewReq) (*pb.AppealReviewRsp, error) {
+	appealEntity := &biz.AppealEntity{
+		ReviewID:  req.GetReviewID(),
+		StoreID:   req.GetStoreID(),
+		Reason:    req.GetReason(),
+		Content:   req.GetContent(),
+		PicInfo:   req.GetPicInfo(),
+		VideoInfo: req.GetVideoInfo(),
+	}
+	err := s.uc.SaveAppeal(ctx, appealEntity)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.AppealReviewRsp{
+		AppealID: appealEntity.AppealID,
 	}, nil
 }
